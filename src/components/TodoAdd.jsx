@@ -1,8 +1,10 @@
 import React, { Component } from "react";
+import { Navigate } from "react-router-dom";
 
 export default class TodoAdd extends Component {
   constructor(props) {
     super(props);
+    this.state = { redirect: false };
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleDescChange = this.handleDescChange.bind(this);
     this.handleImageChange = this.handleImageChange.bind(this);
@@ -45,66 +47,80 @@ export default class TodoAdd extends Component {
     newDeed.createdAt = date.toLocaleString();
     newDeed.key = date.getTime();
     this.props.add(newDeed);
-    const data =  this.clearFormData();
-    console.log("data", data)
-    console.log("newDeed", newDeed);
-    e.target.reset();
+    // const data =  this.clearFormData();
+    // console.log("data", data)
+    // console.log("newDeed", newDeed);
+    // e.target.reset();
+    this.setState((state) => ({ redirect: true }));
   }
 
   render() {
-    return (
-      <section>
-        <h1>Создание нового дела</h1>
-        <form onSubmit={this.handleFormSubmit}>
-          <div className="field">
-            <label className="label">Заголовок</label>
-            <div className="control">
-              <input className="input" type="text" placeholder="Text input" onChange={(event) => this.handleTitleChange(event)}/>
-            </div>
-          </div>
-          <div className="field">
-            <label className="label">Примечание</label>
-            <div className="control">
-              <textarea className="textarea" placeholder="Textarea" onChange={(event) => this.handleDescChange(event)}></textarea>
-            </div>
-          </div>
-          <div className="field">
-            <div className="file">
-              <label className="file-label">
+    if (this.state.redirect) {
+      return <Navigate to="/" />;
+    } else {
+      return (
+        <section>
+          <h1>Создание нового дела</h1>
+          <form onSubmit={this.handleFormSubmit}>
+            <div className="field">
+              <label className="label">Заголовок</label>
+              <div className="control">
                 <input
-                  className="file-input"
-                  type="file"
-                  accept="image/*"
-                  onChange={this.handleImageChange}
+                  className="input"
+                  type="text"
                   placeholder="Text input"
+                  onChange={(event) => this.handleTitleChange(event)}
                 />
-                <span className="file-cta">
-                  <span className="file-label">Графическая иллюстрация</span>
-                </span>
-              </label>
+              </div>
             </div>
-          </div>
-          <div className="field is-grouped is-grouped-right">
-            <div className="control">
-              <input
-                className="button is-link is-primary"
-                type="reset"
-                placeholder="Text input"
-                value="Сброс"
-              />
+            <div className="field">
+              <label className="label">Примечание</label>
+              <div className="control">
+                <textarea
+                  className="textarea"
+                  placeholder="Textarea"
+                  onChange={(event) => this.handleDescChange(event)}
+                ></textarea>
+              </div>
             </div>
+            <div className="field">
+              <div className="file">
+                <label className="file-label">
+                  <input
+                    className="file-input"
+                    type="file"
+                    accept="image/*"
+                    onChange={this.handleImageChange}
+                    placeholder="Text input"
+                  />
+                  <span className="file-cta">
+                    <span className="file-label">Графическая иллюстрация</span>
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div className="field is-grouped is-grouped-right">
+              <div className="control">
+                <input
+                  className="button is-link is-primary"
+                  type="reset"
+                  placeholder="Text input"
+                  value="Сброс"
+                />
+              </div>
 
-            <div className="control">
-              <input
-                className="button is-primary"
-                type="submit"
-                placeholder="Text input"
-                value="Создать дело"
-              />
+              <div className="control">
+                <input
+                  className="button is-primary"
+                  type="submit"
+                  placeholder="Text input"
+                  value="Создать дело"
+                />
+              </div>
             </div>
-          </div>
-        </form>
-      </section>
-    );
+          </form>
+        </section>
+      );
+    }
   }
 }
