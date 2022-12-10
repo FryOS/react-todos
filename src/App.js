@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import TodoList from "./components/TodoList";
 import TodoAdd from "./components/TodoAdd";
+import TodoDetail from "./components/TodoDetail";
 import { HashRouter, Routes, Route, NavLink } from "react-router-dom";
 
 
@@ -33,6 +34,7 @@ export default class App extends Component {
     this.setDone = this.setDone.bind(this);
     this.delete = this.delete.bind(this);
     this.add = this.add.bind(this);
+    this.getDeed = this.getDeed.bind(this);
     this.showMenu = this.showMenu.bind(this);
   }
 
@@ -55,6 +57,13 @@ export default class App extends Component {
     this.state.data.push(deed);
     this.setState((state) => ({...state}));
     console.log(this.state);
+  }
+
+  getDeed(key){
+    key = +key;
+    const deed =  this.state.data.find((current) => current.key === key);
+    console.log("deed from app", deed);
+    return deed;
   }
 
   showMenu(e){
@@ -94,7 +103,7 @@ export default class App extends Component {
             delete={this.delete}  
             />} />
           <Route path="/add" element={<TodoAdd add={this.add} />} />
-            
+          <Route path="/:key" element={<TodoDetail getDeed={this.getDeed} />} />            
           </Routes>
         </main>
       </HashRouter>
