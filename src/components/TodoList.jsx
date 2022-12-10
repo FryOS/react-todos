@@ -5,7 +5,7 @@ const TodoList = (props) => {
   return (
     <section>
       <h1>Дела</h1>
-      <table class="table is-hoverable is-fullwidth">
+      <table className="table is-hoverable is-fullwidth">
         <tbody>
           {props.list.map((item) => (
             <tr key={item.key}>
@@ -25,6 +25,7 @@ const TodoList = (props) => {
                 <button
                   className="button is-danger"
                   title = "Удалить"
+                  onClick = {(e) => props.delete(item.key)}
                 >&#9746;</button>
               </td>
             </tr>
