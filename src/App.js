@@ -8,6 +8,7 @@ import { HashRouter, Routes, Route, NavLink } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Register from "./components/Register";
 import firebaseApp from "./server/firebase";
+import { getList, setDone, deleteTaks } from "./module/api";
 
 const date1 = new Date(2021, 7, 19, 14, 5);
 const date2 = new Date(2021, 7, 19, 15, 23);
@@ -35,7 +36,7 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: initianteData,
+      data: [],
       showMenu: false,
       currentUser: undefined,
     };
@@ -47,7 +48,8 @@ export default class App extends Component {
     this.authStateChanged = this.authStateChanged.bind(this);
   }
 
-  setDone(key) {
+  async setDone(key) {
+    await setDone(this.state.currentUser, key);
     const deed = this.state.data.find((current) => current.key === key);
     if (deed) {
       deed.done = true;
@@ -55,9 +57,9 @@ export default class App extends Component {
     this.setState((state) => ({}));
   }
 
-  delete(key) {
+  async delete(key) {
+    await deleteTaks(this.state.currentUser, key);
     const newData = this.state.data.filter((current) => current.key !== key);
-
     this.setState((state) => ({ data: newData }));
   }
 
@@ -69,7 +71,6 @@ export default class App extends Component {
   }
 
   getDeed(key) {
-    key = +key;
     const deed = this.state.data.find((current) => current.key === key);
     console.log("deed from app", deed);
     return deed;
@@ -81,8 +82,15 @@ export default class App extends Component {
     console.log(this.state);
   }
 
-  authStateChanged(user) {
+  async authStateChanged(user) {
     this.setState((state) => ({ currentUser: user }));
+    if(user){
+      const newData = await getList(user);
+      this.setState((state) => ({data:newData}));
+    }
+    else{
+      this.setState((state) => ({data: []}))
+    }
   }
 
   componentDidMount() {
@@ -190,7 +198,7 @@ export default class App extends Component {
                 />
               }
             />
-            <Route path="/add" element={<TodoAdd add={this.add} />} />
+            <Route path="/add" element={<TodoAdd add={this.add} currentUser={this.state.currentUser}/>} />
             <Route
               path="/:key"
               element={<TodoDetail getDeed={this.getDeed} />}

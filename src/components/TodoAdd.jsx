@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Navigate } from "react-router-dom";
+import { add } from "../module/api";
 
 export default class TodoAdd extends Component {
   constructor(props) {
@@ -39,7 +40,7 @@ export default class TodoAdd extends Component {
       this.formData.image = "";
     }
   }
-  handleFormSubmit(e) {
+  async handleFormSubmit(e) {
     e.preventDefault();
     const newDeed = { ...this.formData };
     const date = new Date();
@@ -47,10 +48,8 @@ export default class TodoAdd extends Component {
     newDeed.createdAt = date.toLocaleString();
     newDeed.key = date.getTime();
     this.props.add(newDeed);
-    // const data =  this.clearFormData();
-    // console.log("data", data)
-    // console.log("newDeed", newDeed);
-    // e.target.reset();
+    const addDeed = await add(this.props.currentUser, newDeed);
+    this.props.add(addDeed)
     this.setState((state) => ({ redirect: true }));
   }
 
