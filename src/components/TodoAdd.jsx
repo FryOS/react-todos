@@ -49,12 +49,14 @@ export default class TodoAdd extends Component {
     newDeed.key = date.getTime();
     this.props.add(newDeed);
     const addDeed = await add(this.props.currentUser, newDeed);
-    this.props.add(addDeed)
+    this.props.add(addDeed);
     this.setState((state) => ({ redirect: true }));
   }
 
   render() {
-    if (this.state.redirect) {
+    if (!this.props.currentUser) {
+      return <Navigate to="/login" replace />;
+    } else if (this.state.redirect) {
       return <Navigate to="/" />;
     } else {
       return (

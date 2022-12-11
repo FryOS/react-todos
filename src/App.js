@@ -4,7 +4,7 @@ import TodoAdd from "./components/TodoAdd";
 import TodoDetail from "./components/TodoDetail";
 import Login from "./components/Login";
 import Logout from "./components/Logout";
-import { HashRouter, Routes, Route, NavLink } from "react-router-dom";
+import { HashRouter, Routes, Route, NavLink, Navigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Register from "./components/Register";
 import firebaseApp from "./server/firebase";
@@ -195,13 +195,14 @@ export default class App extends Component {
                   list={this.state.data}
                   setDone={this.setDone}
                   delete={this.delete}
+                  currentUser={this.state.currentUser}
                 />
               }
             />
             <Route path="/add" element={<TodoAdd add={this.add} currentUser={this.state.currentUser}/>} />
             <Route
               path="/:key"
-              element={<TodoDetail getDeed={this.getDeed} />}
+              element={<TodoDetail getDeed={this.getDeed} currentUser={this.state.currentUser}/>}
             />
             <Route
               path="/register"

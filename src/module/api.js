@@ -51,7 +51,7 @@ export async function getList(user){
 }
 
 export function setDone(user, key){
-  return set((ref(getDatabase(),`user/${user.uid}/todos/${key}/done`), true))
+  return set(ref(getDatabase(),`user/${user.uid}/todos/${key}/done`), true);
 }
 
 export function deleteTaks(user, key){
