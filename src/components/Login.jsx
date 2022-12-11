@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Navigate } from "react-router-dom";
-import { register } from "../module/api";
+import { login } from "../module/api";
 
-class Register extends Component {
+class Login extends Component {
   constructor(props) {
     super(props);
     this.handleEmailChange = this.handleEmailChange.bind(this);
@@ -14,8 +14,7 @@ class Register extends Component {
   clearFormData() {
     this.formData = {
       email: "",
-      password: "",
-      passwordConfirm: "",
+      password: ""
     };
   }
 
@@ -28,7 +27,7 @@ class Register extends Component {
 
   async handleFormSubmit(e) {
     e.preventDefault();
-    const result = await register(this.formData.email, this.formData.password);
+    const result = await login(this.formData.email, this.formData.password);
     if (typeof result !== "object") {
       console.log(result);
     }
@@ -40,7 +39,7 @@ class Register extends Component {
     } else {
       return (
         <section>
-          <h1>Регистрация</h1>
+          <h1>Вход</h1>
           <form onSubmit={this.handleFormSubmit}>
             <div className="field">
               <label className="label">Email</label>
@@ -67,19 +66,10 @@ class Register extends Component {
             <div className="field is-grouped is-grouped-right">
               <div className="control">
                 <input
-                  className="button is-link is-primary"
-                  type="reset"
-                  placeholder="Text input"
-                  value="Сброс"
-                />
-              </div>
-
-              <div className="control">
-                <input
                   className="button is-primary"
                   type="submit"
                   placeholder="Text input"
-                  value="Зарегистрироваться"
+                  value="Войти"
                 />
               </div>
             </div>
@@ -90,4 +80,4 @@ class Register extends Component {
   }
 }
 
-export default Register;
+export default Login;

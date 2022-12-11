@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import TodoList from "./components/TodoList";
 import TodoAdd from "./components/TodoAdd";
 import TodoDetail from "./components/TodoDetail";
+import Login from "./components/Login";
+import Logout from "./components/Logout";
 import { HashRouter, Routes, Route, NavLink } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Register from "./components/Register";
@@ -133,6 +135,20 @@ export default class App extends Component {
                   </NavLink>
                 )
               }
+
+              {
+                !this.state.currentUser && (
+                  <NavLink
+                      to="/login"
+                      className={({ isActive }) =>
+                        "navbar-item" + (isActive ? " is-active" : "")
+                      }
+                    >
+                      Войти
+                  </NavLink>
+                )
+              }
+
               {
                 !this.state.currentUser && (
                   <NavLink
@@ -144,7 +160,20 @@ export default class App extends Component {
                       Зарегистрироваться
                   </NavLink>
                 )
-              }              
+              } 
+
+              {
+                this.state.currentUser && (
+                  <NavLink
+                      to="/logout"
+                      className={({ isActive }) =>
+                        "navbar-item" + (isActive ? " is-active" : "")
+                      }
+                    >
+                      Выйти
+                  </NavLink>
+                )
+              }             
 
             </div>
           </div>
@@ -169,6 +198,14 @@ export default class App extends Component {
             <Route
               path="/register"
               element={<Register currentUser={this.state.currentUser} />}
+            />
+            <Route
+              path="/login"
+              element={<Login currentUser={this.state.currentUser} />}
+            />
+            <Route
+              path="/logout"
+              element={<Logout currentUser={this.state.currentUser} />}
             />
           </Routes>
         </main>
