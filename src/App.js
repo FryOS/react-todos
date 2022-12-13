@@ -10,27 +10,6 @@ import Register from "./components/Register";
 import firebaseApp from "./server/firebase";
 import { getList, setDone, deleteTaks } from "./module/api";
 
-const date1 = new Date(2021, 7, 19, 14, 5);
-const date2 = new Date(2021, 7, 19, 15, 23);
-
-const initianteData = [
-  {
-    title: "Изучить реакт",
-    desc: "Да поскорее",
-    image: "",
-    done: true,
-    createAt: date1.toLocaleDateString(),
-    key: date1.getTime(),
-  },
-  {
-    title: "Изучить редакс",
-    desc: "Да поскорее",
-    image: "",
-    done: false,
-    createAt: date1.toLocaleDateString(),
-    key: date2.getTime(),
-  },
-];
 
 export default class App extends Component {
   constructor(props) {

@@ -2,9 +2,17 @@ import React, { Component } from "react";
 import { Navigate } from "react-router-dom";
 import { login } from "../module/api";
 
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
 class Login extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      errorEmail: "",
+      errorPassword: "",
+    };
+
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -14,7 +22,7 @@ class Login extends Component {
   clearFormData() {
     this.formData = {
       email: "",
-      password: ""
+      password: "",
     };
   }
 
@@ -27,10 +35,81 @@ class Login extends Component {
 
   async handleFormSubmit(e) {
     e.preventDefault();
-    const result = await login(this.formData.email, this.formData.password);
-    if (typeof result !== "object") {
-      console.log(result);
+    
+    console.log(this.validate());
+    if (this.validate()) {
+      const result = await login(this.formData.email, this.formData.password);     
+      console.log("result = ",result);
+      if (typeof result !== "object") {
+        this.showErrorMessage(result);
+      }
     }
+  }
+
+  resetErrorMessages() {
+    this.setState((state) => ({
+      errorEmail: "",
+      errorPassword: "",
+    }));
+  }
+
+  validate() {
+    this.resetErrorMessages();
+    if (!this.formData.email) {
+      this.setState((state) => ({
+        errorEmail: "Адрес электронной почты не указан",
+      }));
+      return false;
+    }
+    if (!this.formData.password) {
+      this.setState((state) => ({
+        errorPassword: "Пароль не указан",
+      }));
+      return false;
+    }
+    return true;
+  }
+
+  showErrorMessage(code) {
+    this.resetErrorMessages();
+    if (code === "auth/email-already-in-use") {
+      this.setState((state) => ({
+        errorEmail: "Поле почты пустое",
+      }));
+    } else if (code === "") {
+      this.setState((state) => ({
+        errorPassword: "Пароль пустой",
+      }));
+    }
+    else if (code === "auth/user-not-found") {
+      this.setState((state) => ({
+        errorEmail: "Такой почты не существует",
+      }));
+    }
+    else if (code === "auth/wrong-password") {
+      this.setState((state) => ({
+        errorPassword: "Неверный пароль",
+      }));
+    }
+  }
+
+  auth() {
+    const auth = getAuth();
+    signInWithEmailAndPassword(
+      auth,
+      this.formData.email,
+      this.formData.password
+    )
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log("user", user);
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
   }
 
   render() {
@@ -50,6 +129,9 @@ class Login extends Component {
                   onChange={this.handleEmailChange}
                 />
               </div>
+              {this.state.errorEmail && (
+                <p className="help is-danger">{this.state.errorEmail}</p>
+              )}
             </div>
 
             <div className="field">
@@ -61,6 +143,9 @@ class Login extends Component {
                   onChange={this.handlePasswordChange}
                 />
               </div>
+              {this.state.errorPassword && (
+                <p className="help is-danger">{this.state.errorPassword}</p>
+              )}
             </div>
 
             <div className="field is-grouped is-grouped-right">
